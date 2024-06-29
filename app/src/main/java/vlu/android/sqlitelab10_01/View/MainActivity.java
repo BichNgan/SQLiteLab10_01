@@ -128,5 +128,41 @@ public class MainActivity extends AppCompatActivity {
                }
             }
         });
+
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String mk = edtMK.getText().toString();
+                String tk = edtTK.getText().toString();
+                if(mk!=null && tk!=null)
+                {
+                    Khoa k = new Khoa(mk,tk);
+                    int flag=0;
+                    for(int i=0;i<lsKhoa.size();i++)
+                        if(k.getMaKhoa().equals(lsKhoa.get(i).getMaKhoa()))
+                        {
+                            flag=1;
+                            break;
+                        }
+                    if(flag==0)
+                    {
+                        Toast.makeText(getApplicationContext(),"Khoa nay khong ton tai",Toast.LENGTH_LONG).show();
+                    }
+                    else
+                    {
+                        khoaHandler.updateRecord(k);
+                        lsKhoa=khoaHandler.loadKhoaTable();
+                        arrayListKhoa = createDataForListView(lsKhoa);
+                        adapter=new ArrayAdapter<>(getApplicationContext(),android.R.layout.simple_list_item_1,arrayListKhoa);
+                        lvKhoa.setAdapter(adapter);
+
+                    }
+
+
+                }
+                else
+                    Toast.makeText(getApplicationContext(),"Du lieu ko hop le",Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

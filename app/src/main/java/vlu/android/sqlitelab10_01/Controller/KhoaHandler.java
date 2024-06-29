@@ -114,13 +114,15 @@ public class KhoaHandler extends SQLiteOpenHelper {
     //Update 1 dong co id la maKhoa trong bang
     public void updateRecord (Khoa khoa)
     {
-        SQLiteDatabase sqLiteDatabase=getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(MKHOA_COL,khoa.getMaKhoa());
-        contentValues.put(TENKHOA_COL,khoa.getTenKhoa());
-        sqLiteDatabase.update(TABLE_NAME,contentValues,
-                MKHOA_COL+"=?",new String[]{khoa.getMaKhoa()});
-        close();
+        SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openDatabase(PATH,null,SQLiteDatabase.CREATE_IF_NECESSARY);
+
+        String sql = "Delete from " + TABLE_NAME +" where "+ MKHOA_COL +" = '" +khoa.getMaKhoa() + "'";
+        sqLiteDatabase.execSQL(sql);
+
+        String sql1 = "INSERT OR IGNORE INTO " + TABLE_NAME + " ("
+                + MKHOA_COL + ", " + TENKHOA_COL + ") " +
+                "Values ('" + khoa.getMaKhoa()+"','" + khoa.getTenKhoa()+"')";
+        sqLiteDatabase.execSQL(sql1);
     }
 
 }
