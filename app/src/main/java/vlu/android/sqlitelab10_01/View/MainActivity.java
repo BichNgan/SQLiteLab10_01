@@ -1,5 +1,6 @@
 package vlu.android.sqlitelab10_01.View;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int DB_VERSION =1;
     private static final String TABLE_NAME = "Khoa";
     private static final String MKHOA_COL = "makhoa";
-    private static final String TENKHOA_COL = "makhoa";
+    private static final String TENKHOA_COL = "tenkhoa";
     private static final String PATH = "/data/data/vlu.android.sqlitelab10_01/database/qlsv.db";
 
     EditText edtMK, edtTK;
@@ -34,8 +35,10 @@ public class MainActivity extends AppCompatActivity {
     ArrayAdapter<String> adapter;
 
     ArrayList<Khoa> lsKhoa = new ArrayList<>();
-    KhoaHandler khoaHandler=new KhoaHandler(getApplicationContext(),DB_NAME,null,DB_VERSION);
+    KhoaHandler khoaHandler;
+    SQLiteDatabase sqLiteDatabase;
 
+    //--------------------------------------------
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,10 +52,13 @@ public class MainActivity extends AppCompatActivity {
         //-------------------------
         addControl();
         //-----------------------
+        khoaHandler = new KhoaHandler(getApplicationContext(),DB_NAME,null,DB_VERSION);
+        khoaHandler.onCreate(sqLiteDatabase);
+        khoaHandler.initData();
+        //----------------------
         lsKhoa = khoaHandler.loadKhoaTable();
         arrayListKhoa = createDataForListView(lsKhoa);
-        adapter = new ArrayAdapter<>(this,
-                androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,arrayListKhoa);
+        adapter=new ArrayAdapter<>(getApplicationContext(),android.R.layout.simple_list_item_1,arrayListKhoa);
         lvKhoa.setAdapter(adapter);
 
 
