@@ -1,5 +1,6 @@
 package vlu.android.sqlitelab10_01.Controller;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -28,6 +29,7 @@ public class KhoaHandler extends SQLiteOpenHelper {
     //Tao bang Khoa
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        onUpgrade(sqLiteDatabase,1,2);
         sqLiteDatabase =SQLiteDatabase.openDatabase(PATH,null,SQLiteDatabase.CREATE_IF_NECESSARY);
         String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "(" + MKHOA_COL +" INTEGER NOT NULL UNIQUE, " +
                 TENKHOA_COL + " TEXT NOT NULL UNIQUE, PRIMARY KEY(" + MKHOA_COL + "))";
@@ -77,6 +79,19 @@ public class KhoaHandler extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+        String sql = "DROP TABLE IF EXISTS " + TABLE_NAME;
+        sqLiteDatabase.execSQL(sql);
     }
+
+    //Them 1 dong khoa vao bang Khoa
+    public void addRecordIntoKhoaTable (Khoa khoa)
+    {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MKHOA_COL,khoa.getMaKhoa());
+        contentValues.put(TENKHOA_COL,khoa.getTenKhoa());
+        sqLiteDatabase.insert(TABLE_NAME,null,contentValues);
+        sqLiteDatabase.close();
+    }
+
 }
