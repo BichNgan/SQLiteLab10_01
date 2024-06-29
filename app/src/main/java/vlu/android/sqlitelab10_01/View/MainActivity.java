@@ -2,10 +2,13 @@ package vlu.android.sqlitelab10_01.View;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -60,8 +63,8 @@ public class MainActivity extends AppCompatActivity {
         arrayListKhoa = createDataForListView(lsKhoa);
         adapter=new ArrayAdapter<>(getApplicationContext(),android.R.layout.simple_list_item_1,arrayListKhoa);
         lvKhoa.setAdapter(adapter);
-
-
+        //------------------------------
+        addEvent();
 
     }
     void addControl()
@@ -82,5 +85,37 @@ public class MainActivity extends AppCompatActivity {
             arrayListLV.add(st);
         }
         return arrayListLV;
+    }
+
+    void addEvent()
+    {
+        lvKhoa.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Khoa k = lsKhoa.get(i);
+                edtMK.setText(k.getMaKhoa());
+                edtTK.setText(k.getTenKhoa());
+            }
+        });
+
+        btnInsert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String makhoa = edtMK.getText().toString();
+                String tenkhoa = edtTK.getText().toString();
+                Khoa k = new Khoa(makhoa,tenkhoa);
+               if(lsKhoa.contains(k))//true
+               {
+                   Toast.makeText(getApplicationContext(),"Khoa da ton tai",Toast.LENGTH_LONG).show();
+               }
+               else
+               {
+                   khoaHandler.addRecordIntoKhoaTable(k);
+                   lsKhoa=khoaHandler.loadKhoaTable();
+                   arrayListKhoa = createDataForListView(lsKhoa);
+                   adapter.notifyDataSetChanged();
+               }
+            }
+        });
     }
 }
