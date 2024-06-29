@@ -93,5 +93,23 @@ public class KhoaHandler extends SQLiteOpenHelper {
         sqLiteDatabase.insert(TABLE_NAME,null,contentValues);
         sqLiteDatabase.close();
     }
+    //Xoa 1 dong co id la makhoa trong bang
+    public void deleteRecord(String maKhoa)
+    {
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        sqLiteDatabase.delete(TABLE_NAME,MKHOA_COL+ "=?",new String[]{maKhoa});
+        sqLiteDatabase.close();
+    }
+    //Update 1 dong co id la maKhoa trong bang
+    public void updateRecord (Khoa khoa)
+    {
+        SQLiteDatabase sqLiteDatabase=getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MKHOA_COL,khoa.getMaKhoa());
+        contentValues.put(TENKHOA_COL,khoa.getTenKhoa());
+        sqLiteDatabase.update(TABLE_NAME,contentValues,
+                MKHOA_COL+"=?",new String[]{khoa.getMaKhoa()});
+        close();
+    }
 
 }

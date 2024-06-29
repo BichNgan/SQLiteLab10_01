@@ -14,9 +14,18 @@ import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
 
+import vlu.android.sqlitelab10_01.Controller.KhoaHandler;
+import vlu.android.sqlitelab10_01.Model.Khoa;
 import vlu.android.sqlitelab10_01.R;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String DB_NAME = "qlsv";
+    private static final int DB_VERSION =1;
+    private static final String TABLE_NAME = "Khoa";
+    private static final String MKHOA_COL = "makhoa";
+    private static final String TENKHOA_COL = "makhoa";
+    private static final String PATH = "/data/data/vlu.android.sqlitelab10_01/database/qlsv.db";
 
     EditText edtMK, edtTK;
     Button btnInsert, btnUpdate;
@@ -24,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> arrayListKhoa = new ArrayList<>();
     ArrayAdapter<String> adapter;
 
+    ArrayList<Khoa> lsKhoa = new ArrayList<>();
+    KhoaHandler khoaHandler=new KhoaHandler(getApplicationContext(),DB_NAME,null,DB_VERSION);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +49,13 @@ public class MainActivity extends AppCompatActivity {
         //-------------------------
         addControl();
         //-----------------------
+        lsKhoa = khoaHandler.loadKhoaTable();
+        arrayListKhoa = createDataForListView(lsKhoa);
+        adapter = new ArrayAdapter<>(this,
+                androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,arrayListKhoa);
+        lvKhoa.setAdapter(adapter);
+
+
 
     }
     void addControl()
@@ -47,5 +65,16 @@ public class MainActivity extends AppCompatActivity {
         btnInsert = (Button) findViewById(R.id.btnInsert);
         btnUpdate= (Button) findViewById(R.id.btnUpdate);
         lvKhoa = (ListView) findViewById(R.id.lvKhoa);
+    }
+
+    ArrayList<String> createDataForListView(ArrayList<Khoa> lsKhoa)
+    {
+        ArrayList<String> arrayListLV = new ArrayList<>();
+        for (Khoa k:lsKhoa)
+        {
+            String st = k.getMaKhoa() + " " +k.getTenKhoa();
+            arrayListLV.add(st);
+        }
+        return arrayListLV;
     }
 }
