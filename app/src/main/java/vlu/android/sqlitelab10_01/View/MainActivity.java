@@ -104,7 +104,16 @@ public class MainActivity extends AppCompatActivity {
                 String makhoa = edtMK.getText().toString();
                 String tenkhoa = edtTK.getText().toString();
                 Khoa k = new Khoa(makhoa,tenkhoa);
-               if(lsKhoa.contains(k))//true
+
+                int flag=0;
+                for(int i=0;i<lsKhoa.size();i++)
+                    if(k.getMaKhoa().equals(lsKhoa.get(i).getMaKhoa()))
+                    {
+                        flag=1;
+                        break;
+                    }
+
+               if(flag==1)//co khoa k roi
                {
                    Toast.makeText(getApplicationContext(),"Khoa da ton tai",Toast.LENGTH_LONG).show();
                }
@@ -113,7 +122,9 @@ public class MainActivity extends AppCompatActivity {
                    khoaHandler.addRecordIntoKhoaTable(k);
                    lsKhoa=khoaHandler.loadKhoaTable();
                    arrayListKhoa = createDataForListView(lsKhoa);
-                   adapter.notifyDataSetChanged();
+                   adapter=new ArrayAdapter<>(getApplicationContext(),android.R.layout.simple_list_item_1,arrayListKhoa);
+                   lvKhoa.setAdapter(adapter);
+
                }
             }
         });

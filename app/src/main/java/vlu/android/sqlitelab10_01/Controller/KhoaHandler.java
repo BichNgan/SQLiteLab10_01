@@ -88,12 +88,21 @@ public class KhoaHandler extends SQLiteOpenHelper {
     //Them 1 dong khoa vao bang Khoa
     public void addRecordIntoKhoaTable (Khoa khoa)
     {
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(MKHOA_COL,khoa.getMaKhoa());
-        contentValues.put(TENKHOA_COL,khoa.getTenKhoa());
-        sqLiteDatabase.insert(TABLE_NAME,null,contentValues);
-        sqLiteDatabase.close();
+
+        SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openDatabase(PATH,null,SQLiteDatabase.CREATE_IF_NECESSARY);
+
+        String sql = "INSERT OR IGNORE INTO " + TABLE_NAME + " ("
+                + MKHOA_COL + ", " + TENKHOA_COL + ") " +
+                "Values ('" + khoa.getMaKhoa()+"','" + khoa.getTenKhoa()+"')";
+        sqLiteDatabase.execSQL(sql);
+
+//        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+//        ContentValues contentValues = new ContentValues();
+//        contentValues.put(MKHOA_COL,khoa.getMaKhoa());
+//        contentValues.put(TENKHOA_COL,khoa.getTenKhoa());
+//        sqLiteDatabase.insert(TABLE_NAME,null,contentValues);
+//        sqLiteDatabase.close();
+
     }
     //Xoa 1 dong co id la makhoa trong bang
     public void deleteRecord(String maKhoa)
